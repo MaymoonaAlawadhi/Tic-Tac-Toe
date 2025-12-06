@@ -5,12 +5,12 @@ import math
 
 pygame.init()
 
-# ---------- Window Settings ----------
+# ====================== Window Settings ======================
 WIDTH, HEIGHT = 700, 850
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Pastel Tic-Tac-Toe")
+pygame.display.set_caption("Tic-Tac-Toe")
 
-# ---------- Modern Pastel Color Scheme ----------
+# =================== Pastel Color Scheme =====================
 BACKGROUND = (250, 248, 245)  # Soft off-white
 CARD_BG = (255, 255, 255)    # Pure white for cards
 ACCENT_BG = (245, 243, 250)  # Very light lavender
@@ -40,7 +40,7 @@ AI_COLOR = (255, 105, 180)       # Hot pink for O
 WIN_LINE = (255, 182, 193)       # Pastel pink for winning line
 GRID_COLOR = (220, 220, 230)     # Light gray for grid
 
-# ---------- Fonts ----------
+# =========================== Fonts ===========================
 try:
     # Modern sans-serif fonts
     title_font = pygame.font.Font(None, 72)
@@ -56,7 +56,7 @@ except:
     info_font = pygame.font.SysFont("Arial", 26)
     small_font = pygame.font.SysFont("Arial", 22)
 
-# ---------- Game Constants ----------
+# ===================== Game Constants ========================
 BOARD_SIZE = 550
 CELL_SIZE = BOARD_SIZE // 3
 BOARD_MARGIN = (WIDTH - BOARD_SIZE) // 2
@@ -79,7 +79,7 @@ WIN_COMBOS = [
     (0, 4, 8), (2, 4, 6)
 ]
 
-# ---------- Subtle Shadow Effect ----------
+# =================== Subtle Shadow Effect ====================
 def draw_shadow(surface, rect, color, radius=0, offset=(2, 2), alpha=20):
     shadow_rect = pygame.Rect(rect.x + offset[0], rect.y + offset[1], 
                              rect.width, rect.height)
@@ -88,9 +88,7 @@ def draw_shadow(surface, rect, color, radius=0, offset=(2, 2), alpha=20):
                     border_radius=radius)
     surface.blit(shadow_surf, shadow_rect)
 
-# ======================================================
-#                 MODERN BUTTON CLASS
-# ======================================================
+# ====================== BUTTON CLASS  ========================
 class Button:
     def __init__(self, x, y, w, h, text, color=BUTTON_BG, hover_color=BUTTON_HOVER, 
                  func=None, is_toggle=False, icon=None):
@@ -146,9 +144,7 @@ class Button:
             self.active = True
         return True
 
-# ======================================================
-#                  GAME LOGIC
-# ======================================================
+# ====================== GAME LOGIC ===========================
 def draw_board():
     WIN.fill(BACKGROUND)
     
@@ -341,9 +337,7 @@ def draw_winning_line(combo):
     # Main line
     pygame.draw.line(WIN, WIN_LINE, (ax, ay), (cx, cy), line_thickness)
 
-# ======================================================
-#                GAME LOOP
-# ======================================================
+# ======================= GAME LOOP ==========================
 restart_btn = Button(WIDTH - 210, HEIGHT - 110, 160, 45, "Restart", 
                     PASTEL_MINT, PASTEL_GREEN, reset_game)
 
@@ -414,9 +408,7 @@ def game_loop():
 
         pygame.display.update()
 
-# ======================================================
-#     MODERN SCREEN: CHOOSE FIRST PLAYER
-# ======================================================
+# ================== CHOOSE FIRST PLAYER =====================
 def choose_first_screen():
     WIN.fill(BACKGROUND)
     
@@ -534,9 +526,7 @@ def set_ai_first():
     first_player = "ai"
     game_loop()
 
-# ======================================================
-#                 MODERN MAIN MENU
-# ======================================================
+# ====================== MAIN MENU ===========================
 def main_menu():
     # Create menu buttons
     easy_btn = Button(WIDTH//2 - 220, 280, 200, 60, "Easy", 
@@ -657,8 +647,6 @@ def quit_game():
     pygame.quit()
     sys.exit()
 
-# ======================================================
-#                      RUN
-# ======================================================
+# ========================= RUN ==============================
 if __name__ == "__main__":
     main_menu()
