@@ -340,12 +340,16 @@ def minimax(b, depth, maximizing, alpha, beta):
         return best_score, best_move
 
 def ai_pick():
+    moves = available_moves(board)
+    if not moves:
+        return None
+    
     if difficulty == "easy":
-        return random.choice(available_moves(board))
+        return random.choice(moves)
     if difficulty == "medium":
         if random.random() < 0.6:
             return minimax(board, 0, True, -math.inf, math.inf)[1]
-        return random.choice(available_moves(board))
+        return random.choice(moves)
     return minimax(board, 0, True, -math.inf, math.inf)[1]
 
 def draw_winning_line(combo):
