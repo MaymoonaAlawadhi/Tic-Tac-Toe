@@ -10,35 +10,34 @@ width, height = 700, 775  # Optimized height to fit on screen
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Tic-Tac-Toe")
 
-# Colors — pastel palette
-background = (250, 248, 245)  # Soft off-white
-card_bg = (255, 255, 255)    # Pure white for cards
-accent_bg = (245, 243, 250)  # Very light lavender
+# Colors
+background = (250, 248, 245)  
+card_bg = (255, 255, 255)   
+accent_bg = (245, 243, 250)
 
-# Pastel accent colors
-blue = (173, 216, 230)    # Light blue
-pink = (255, 182, 193)    # Light pink
-green = (152, 251, 152)   # Light green
-lavender = (216, 191, 216) # Light lavender
-coral = (255, 127, 127)   # Light coral
-mint = (170, 240, 209)    # Mint green
+blue = (173, 216, 230) 
+pink = (255, 182, 193)   
+green = (152, 251, 152)   
+lavender = (216, 191, 216) 
+coral = (255, 127, 127)   
+mint = (170, 240, 209)   
 
 # Text colors
-dark_text = (60, 60, 70)         # Dark gray for text
-medium_text = (100, 100, 110)    # Medium gray
-light_text = (150, 150, 160)     # Light gray
+dark_text = (60, 60, 70)         
+medium_text = (100, 100, 110)    
+light_text = (150, 150, 160)   
 
 # Button colors
-button_bg = (240, 240, 245)      # Very light gray
-button_hover = (220, 220, 230)   # Slightly darker
-button_active = (200, 220, 240)  # Active state
-button_border = (210, 210, 220)  # Button border
+button_bg = (240, 240, 245)    
+button_hover = (220, 220, 230)   
+button_active = (200, 220, 240) 
+button_border = (210, 210, 220)  
 
 # Game colors
-player_color = (100, 149, 237)   # Cornflower blue for X
-ai_color = (255, 105, 180)       # Hot pink for O
-win_line = (255, 182, 193)       # Pastel pink for winning line
-grid_color = (220, 220, 230)     # Light gray for grid
+player_color = (100, 149, 237)  
+ai_color = (255, 105, 180)      
+win_line = (255, 182, 193)      
+grid_color = (220, 220, 230)   
 
 # Fonts
 try:
@@ -57,10 +56,10 @@ except:
     small_font = pygame.font.SysFont("Arial", 22)
 
 # Game constants
-board_size = 450  # Reduced from 550 to make room
+board_size = 450 
 cell_size = board_size // 3
 board_margin = (width - board_size) // 2
-board_y = 120  # Slightly higher
+board_y = 120 
 
 player = "X"
 ai = "O"
@@ -79,7 +78,7 @@ win_combos = [
     (0, 4, 8), (2, 4, 6)
 ]
 
-# Subtle shadow helper
+# Shadow
 def draw_shadow(surface, rect, color, radius=0, offset=(2, 2), alpha=20):
     shadow_rect = pygame.Rect(rect.x + offset[0], rect.y + offset[1], 
                              rect.width, rect.height)
@@ -211,14 +210,14 @@ def draw_board():
             # Main O circle
             pygame.draw.circle(win, ai_color, (x, y), radius, 6)
     
-    # Draw the enhanced status card (compact but clear)
+    # Draw the enhanced status card
     status_rect = pygame.Rect(40, board_y + board_size + 20, width - 80, 70)
     draw_shadow(win, status_rect, (0, 0, 0), 12)
     pygame.draw.rect(win, card_bg, status_rect, border_radius=12)
     
     # Show current game status with enhanced, clearer text
     if not game_over:
-        # Show whose turn it is - MAIN STATUS
+        # Show whose turn it is 
         if current_turn == player:
             turn_text = "PLAYER'S TURN (X)"
             turn_color = player_color
@@ -239,7 +238,7 @@ def draw_board():
         win.blit(indicator_surf, (width//2 - indicator_surf.get_width()//2, 
                                  status_rect.y + 45))
     elif winner:
-        # Show winner announcement - CLEAR RESULT
+        # Show winner
         if winner == player:
             result_text = "PLAYER WINS!"
             result_color = player_color
@@ -258,7 +257,7 @@ def draw_board():
         win.blit(celebration_surf, (width//2 - celebration_surf.get_width()//2, 
                                    status_rect.y + 45))
     else:
-        # Show draw message - CLEAR TIE
+        # Show draw message
         draw_text = "IT'S A DRAW!"
         draw_surf = sub_font.render(draw_text, True, medium_text)
         win.blit(draw_surf, (width//2 - draw_surf.get_width()//2, 
@@ -315,6 +314,7 @@ def minimax(b, depth, maximizing, alpha, beta):
     w, _ = check_winner(b)
     if w or is_full(b): return evaluate(b), None
 
+    # Minimax with alpha-beta pruning for AI move
     if maximizing:
         best_score, best_move = -math.inf, None
         for m in available_moves(b):
@@ -327,6 +327,7 @@ def minimax(b, depth, maximizing, alpha, beta):
             if beta <= alpha: break
         return best_score, best_move
 
+    # Minimizing with alpha-beta pruning for player move
     else:
         best_score, best_move = math.inf, None
         for m in available_moves(b):
@@ -347,7 +348,7 @@ def ai_pick():
     if difficulty == "easy":
         return random.choice(moves)
     if difficulty == "medium":
-        if random.random() < 0.6:
+        if random.random() < 0.6: # 60% chance to use minimax
             return minimax(board, 0, True, -math.inf, math.inf)[1]
         return random.choice(moves)
     return minimax(board, 0, True, -math.inf, math.inf)[1]
