@@ -6,7 +6,7 @@ import math
 pygame.init()
 
 # Window settings
-width, height = 700, 850  # Optimized height to fit on screen
+width, height = 700, 775  # Optimized height to fit on screen
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Tic-Tac-Toe")
 
@@ -57,7 +57,7 @@ except:
     small_font = pygame.font.SysFont("Arial", 22)
 
 # Game constants
-board_size = 480  # Reduced from 550 to make room
+board_size = 450  # Reduced from 550 to make room
 cell_size = board_size // 3
 board_margin = (width - board_size) // 2
 board_y = 120  # Slightly higher
@@ -212,7 +212,7 @@ def draw_board():
             pygame.draw.circle(win, ai_color, (x, y), radius, 6)
     
     # Draw the enhanced status card (compact but clear)
-    status_rect = pygame.Rect(40, board_y + board_size + 30, width - 80, 85)
+    status_rect = pygame.Rect(40, board_y + board_size + 20, width - 80, 70)
     draw_shadow(win, status_rect, (0, 0, 0), 12)
     pygame.draw.rect(win, card_bg, status_rect, border_radius=12)
     
@@ -228,7 +228,7 @@ def draw_board():
             
         turn_surf = sub_font.render(turn_text, True, turn_color)
         win.blit(turn_surf, (width//2 - turn_surf.get_width()//2, 
-                            status_rect.y + 10))
+                            status_rect.y + 8))
         
         # Add a helpful indicator text
         if current_turn == player:
@@ -237,7 +237,7 @@ def draw_board():
             indicator_text = "AI is thinking..."
         indicator_surf = small_font.render(indicator_text, True, light_text)
         win.blit(indicator_surf, (width//2 - indicator_surf.get_width()//2, 
-                                 status_rect.y + 55))
+                                 status_rect.y + 45))
     elif winner:
         # Show winner announcement - CLEAR RESULT
         if winner == player:
@@ -251,34 +251,34 @@ def draw_board():
             
         result_surf = sub_font.render(result_text, True, result_color)
         win.blit(result_surf, (width//2 - result_surf.get_width()//2, 
-                              status_rect.y + 10))
+                              status_rect.y + 8))
         
         # Add celebration/encouragement text
         celebration_surf = small_font.render(celebration, True, medium_text)
         win.blit(celebration_surf, (width//2 - celebration_surf.get_width()//2, 
-                                   status_rect.y + 55))
+                                   status_rect.y + 45))
     else:
         # Show draw message - CLEAR TIE
         draw_text = "IT'S A DRAW!"
         draw_surf = sub_font.render(draw_text, True, medium_text)
         win.blit(draw_surf, (width//2 - draw_surf.get_width()//2, 
-                            status_rect.y + 10))
+                            status_rect.y + 8))
         
         # Add secondary text
         tie_text = "Good game! Play again?"
         tie_surf = small_font.render(tie_text, True, light_text)
         win.blit(tie_surf, (width//2 - tie_surf.get_width()//2, 
-                           status_rect.y + 55))
+                           status_rect.y + 45))
     
     # Draw the control panel
-    panel_rect = pygame.Rect(40, height - 145, width - 80, 105)
+    panel_rect = pygame.Rect(40, height - 110, width - 80, 80)
     draw_shadow(win, panel_rect, (0, 0, 0), 15)
     pygame.draw.rect(win, accent_bg, panel_rect, border_radius=15)
     
     # Show game info
     info_text = f"{difficulty.upper()} MODE  •  {first_player.upper()} STARTS"
     info_surf = info_font.render(info_text, True, medium_text)
-    win.blit(info_surf, (width//2 - info_surf.get_width()//2, panel_rect.y + 20))
+    win.blit(info_surf, (width//2 - info_surf.get_width()//2, panel_rect.y + 12))
     
     # Draw control buttons
     restart_btn.draw()
@@ -373,10 +373,10 @@ def draw_winning_line(combo):
     pygame.draw.line(win, win_line, (ax, ay), (cx, cy), line_thickness)
 
 # ======================= GAME LOOP ==========================
-restart_btn = Button(width - 210, height - 95, 160, 45, "Restart", 
+restart_btn = Button(width - 190, height - 70, 140, 38, "Restart", 
                     mint, green, reset_game)
 
-menu_btn = Button(50, height - 95, 160, 45, "Menu", 
+menu_btn = Button(50, height - 70, 140, 38, "Menu", 
                  lavender, pink, lambda: None)
 
 def game_loop():
@@ -495,7 +495,7 @@ def choose_first_screen():
                    ai_card.height, "", func=set_ai_first)
     
     # Back button
-    back_btn = Button(40, height - 100, 200, 50, "Back to Menu", 
+    back_btn = Button(150, height - 100, 400, 50, "Back to Menu", 
                      lavender, pink, main_menu)
     
     buttons = [player_btn, ai_btn, back_btn]
@@ -564,13 +564,13 @@ def set_ai_first():
 # Main menu
 def main_menu():
     # Create menu buttons
-    easy_btn = Button(width//2 - 220, 280, 200, 60, "Easy", 
+    easy_btn = Button(150, 300, 400, 60, "Easy", 
                      mint, green, set_easy, is_toggle=True)
-    medium_btn = Button(width//2 - 220, 360, 200, 60, "Medium", 
+    medium_btn = Button(150, 380, 400, 60, "Medium", 
                        blue, lavender, set_medium, is_toggle=True)
-    hard_btn = Button(width//2 - 220, 440, 200, 60, "Hard", 
+    hard_btn = Button(150, 460, 400, 60, "Hard", 
                      pink, coral, set_hard, is_toggle=True)
-    quit_btn = Button(width//2 - 220, 540, 200, 60, "Quit", 
+    quit_btn = Button(200, 580, 300, 60, "Quit", 
                      button_bg, button_hover, quit_game)
     
     # Set active button based on current difficulty
@@ -638,12 +638,7 @@ def main_menu():
         # Draw the menu buttons
         for btn in menu_buttons:
             btn.draw()
-        
-        # Draw the footer text
-        footer_text = "A minimalist pastel experience"
-        footer_surf = small_font.render(footer_text, True, light_text)
-        win.blit(footer_surf, (width//2 - footer_surf.get_width()//2, height - 40))
-        
+
         pygame.display.update()
 
         for event in pygame.event.get():
