@@ -5,12 +5,12 @@ import math
 
 pygame.init()
 
-# ====================== Window Settings ======================
-width, height = 700, 850
+# Window settings
+width, height = 700, 850  # Optimized height to fit on screen
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Tic-Tac-Toe")
 
-# =================== Pastel Color Scheme =====================
+# Colors — pastel palette
 background = (250, 248, 245)  # Soft off-white
 card_bg = (255, 255, 255)    # Pure white for cards
 accent_bg = (245, 243, 250)  # Very light lavender
@@ -40,27 +40,27 @@ ai_color = (255, 105, 180)       # Hot pink for O
 win_line = (255, 182, 193)       # Pastel pink for winning line
 grid_color = (220, 220, 230)     # Light gray for grid
 
-# =========================== Fonts ===========================
+# Fonts
 try:
-    # Modern sans-serif fonts
+    # Try modern sans-serif fonts
     title_font = pygame.font.Font(None, 72)
     sub_font = pygame.font.Font(None, 42)
     button_font = pygame.font.Font(None, 32)
     info_font = pygame.font.Font(None, 26)
     small_font = pygame.font.Font(None, 22)
 except:
-    # Fallback to system fonts
+    # Fall back to system fonts
     title_font = pygame.font.SysFont("Arial", 72, bold=True)
     sub_font = pygame.font.SysFont("Arial", 42)
     button_font = pygame.font.Font(None, 32)
     info_font = pygame.font.SysFont("Arial", 26)
     small_font = pygame.font.SysFont("Arial", 22)
 
-# ===================== Game Constants ========================
-board_size = 550
+# Game constants
+board_size = 480  # Reduced from 550 to make room
 cell_size = board_size // 3
 board_margin = (width - board_size) // 2
-board_y = 130
+board_y = 120  # Slightly higher
 
 player = "X"
 ai = "O"
@@ -79,16 +79,16 @@ win_combos = [
     (0, 4, 8), (2, 4, 6)
 ]
 
-# =================== Subtle Shadow Effect ====================
+# Subtle shadow helper
 def draw_shadow(surface, rect, color, radius=0, offset=(2, 2), alpha=20):
     shadow_rect = pygame.Rect(rect.x + offset[0], rect.y + offset[1], 
                              rect.width, rect.height)
-    shadow_surf = pygame.Surface((rect.width, rect.height), pygame.srcalpha)
+    shadow_surf = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
     pygame.draw.rect(shadow_surf, (*color, alpha), shadow_surf.get_rect(), 
                     border_radius=radius)
     surface.blit(shadow_surf, shadow_rect)
 
-# ====================== BUTTON CLASS  ========================
+# Button class
 class Button:
     def __init__(self, x, y, w, h, text, color=button_bg, hover_color=button_hover, 
                  func=None, is_toggle=False, icon=None):
@@ -144,27 +144,27 @@ class Button:
             self.active = True
         return True
 
-# ====================== GAME LOGIC ===========================
+# Game logic
 def draw_board():
     win.fill(background)
     
-    # Draw header card
+    # Draw the header card
     header_rect = pygame.Rect(40, 20, width - 80, 80)
     draw_shadow(win, header_rect, (0, 0, 0), 15)
     pygame.draw.rect(win, card_bg, header_rect, border_radius=15)
     
-    # Draw title
+    # Draw the title
     title_text = "Tic-Tac-Toe"
     title_surf = title_font.render(title_text, True, dark_text)
     win.blit(title_surf, (width//2 - title_surf.get_width()//2, 45))
     
-    # Draw board container with shadow
+    # Draw the board container with a shadow
     board_container = pygame.Rect(board_margin - 15, board_y - 15, 
                                  board_size + 30, board_size + 30)
     draw_shadow(win, board_container, (0, 0, 0), 20, alpha=15)
     pygame.draw.rect(win, card_bg, board_container, border_radius=20)
     
-    # Draw grid lines
+    # Draw the grid lines
     for i in range(1, 3):
         # Vertical lines
         x = board_margin + i * cell_size
@@ -176,17 +176,17 @@ def draw_board():
         pygame.draw.line(win, grid_color, (board_margin, y), 
                         (board_margin + board_size, y), 3)
     
-    # Draw symbols with modern style
+    # Draw the board symbols
     for i in range(9):
         x = board_margin + (i % 3) * cell_size + cell_size // 2
         y = board_y + (i // 3) * cell_size + cell_size // 2
         
         if board[i] == "X":
-            # Draw modern X with shadow
+            # Draw the X with a shadow
             size = cell_size // 3.5
             offset = 3
             
-            # Shadow
+            # Shadow for the X
             pygame.draw.line(win, (*player_color, 100), 
                            (x - size - offset, y - size - offset),
                            (x + size + offset, y + size + offset), 8)
@@ -194,56 +194,91 @@ def draw_board():
                            (x + size + offset, y - size - offset),
                            (x - size - offset, y + size + offset), 8)
             
-            # Main X
+            # Main X strokes
             pygame.draw.line(win, player_color, 
                            (x - size, y - size), (x + size, y + size), 6)
             pygame.draw.line(win, player_color, 
                            (x + size, y - size), (x - size, y + size), 6)
             
         elif board[i] == "O":
-            # Draw modern O with shadow
+            # Draw the O with a shadow
             radius = cell_size // 3.5
             offset = 3
             
-            # Shadow
+            # Shadow for the O
             pygame.draw.circle(win, (*ai_color, 100), (x, y), radius + offset, 8)
             
-            # Main O
+            # Main O circle
             pygame.draw.circle(win, ai_color, (x, y), radius, 6)
     
-    # Draw status card
-    status_rect = pygame.Rect(40, board_y + board_size + 40, width - 80, 70)
+    # Draw the enhanced status card (compact but clear)
+    status_rect = pygame.Rect(40, board_y + board_size + 30, width - 80, 85)
     draw_shadow(win, status_rect, (0, 0, 0), 12)
     pygame.draw.rect(win, card_bg, status_rect, border_radius=12)
     
-    # Draw game status
+    # Show current game status with enhanced, clearer text
     if not game_over:
-        turn_text = f"{'Your' if current_turn == player else 'AI'}'s Turn"
-        turn_color = player_color if current_turn == player else ai_color
+        # Show whose turn it is - MAIN STATUS
+        if current_turn == player:
+            turn_text = "PLAYER'S TURN (X)"
+            turn_color = player_color
+        else:
+            turn_text = "AI'S TURN (O)"
+            turn_color = ai_color
+            
         turn_surf = sub_font.render(turn_text, True, turn_color)
         win.blit(turn_surf, (width//2 - turn_surf.get_width()//2, 
-                            status_rect.y + 25))
+                            status_rect.y + 10))
+        
+        # Add a helpful indicator text
+        if current_turn == player:
+            indicator_text = "Click on an empty cell to play"
+        else:
+            indicator_text = "AI is thinking..."
+        indicator_surf = small_font.render(indicator_text, True, light_text)
+        win.blit(indicator_surf, (width//2 - indicator_surf.get_width()//2, 
+                                 status_rect.y + 55))
     elif winner:
-        result_text = f"{'You' if winner == player else 'AI'} Win!"
-        result_color = player_color if winner == player else ai_color
+        # Show winner announcement - CLEAR RESULT
+        if winner == player:
+            result_text = "PLAYER WINS!"
+            result_color = player_color
+            celebration = "Congratulations!"
+        else:
+            result_text = "AI WINS!"
+            result_color = ai_color
+            celebration = "Better luck next time!"
+            
         result_surf = sub_font.render(result_text, True, result_color)
         win.blit(result_surf, (width//2 - result_surf.get_width()//2, 
-                              status_rect.y + 25))
+                              status_rect.y + 10))
+        
+        # Add celebration/encouragement text
+        celebration_surf = small_font.render(celebration, True, medium_text)
+        win.blit(celebration_surf, (width//2 - celebration_surf.get_width()//2, 
+                                   status_rect.y + 55))
     else:
-        draw_text = "It's a Draw!"
+        # Show draw message - CLEAR TIE
+        draw_text = "IT'S A DRAW!"
         draw_surf = sub_font.render(draw_text, True, medium_text)
         win.blit(draw_surf, (width//2 - draw_surf.get_width()//2, 
-                            status_rect.y + 25))
+                            status_rect.y + 10))
+        
+        # Add secondary text
+        tie_text = "Good game! Play again?"
+        tie_surf = small_font.render(tie_text, True, light_text)
+        win.blit(tie_surf, (width//2 - tie_surf.get_width()//2, 
+                           status_rect.y + 55))
     
-    # Draw control panel
-    panel_rect = pygame.Rect(40, height - 160, width - 80, 120)
+    # Draw the control panel
+    panel_rect = pygame.Rect(40, height - 145, width - 80, 105)
     draw_shadow(win, panel_rect, (0, 0, 0), 15)
     pygame.draw.rect(win, accent_bg, panel_rect, border_radius=15)
     
-    # Draw game info
+    # Show game info
     info_text = f"{difficulty.upper()} MODE  •  {first_player.upper()} STARTS"
     info_surf = info_font.render(info_text, True, medium_text)
-    win.blit(info_surf, (width//2 - info_surf.get_width()//2, panel_rect.y + 25))
+    win.blit(info_surf, (width//2 - info_surf.get_width()//2, panel_rect.y + 20))
     
     # Draw control buttons
     restart_btn.draw()
@@ -338,10 +373,10 @@ def draw_winning_line(combo):
     pygame.draw.line(win, win_line, (ax, ay), (cx, cy), line_thickness)
 
 # ======================= GAME LOOP ==========================
-restart_btn = Button(width - 210, height - 110, 160, 45, "Restart", 
+restart_btn = Button(width - 210, height - 95, 160, 45, "Restart", 
                     mint, green, reset_game)
 
-menu_btn = Button(50, height - 110, 160, 45, "Menu", 
+menu_btn = Button(50, height - 95, 160, 45, "Menu", 
                  lavender, pink, lambda: None)
 
 def game_loop():
@@ -380,7 +415,7 @@ def game_loop():
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.mousebuttondown:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 
                 # Check button clicks
@@ -408,11 +443,11 @@ def game_loop():
 
         pygame.display.update()
 
-# ================== CHOOSE FIRST PLAYER =====================
+# Choose who starts
 def choose_first_screen():
     win.fill(background)
     
-    # Draw title card
+    # Draw the title card
     title_card = pygame.Rect(40, 60, width - 80, 120)
     draw_shadow(win, title_card, (0, 0, 0), 20)
     pygame.draw.rect(win, card_bg, title_card, border_radius=20)
@@ -422,7 +457,7 @@ def choose_first_screen():
     title_surf = title_font.render(title, True, dark_text)
     win.blit(title_surf, (width//2 - title_surf.get_width()//2, 100))
     
-    # Create option cards
+    # Create the option cards
     player_card = pygame.Rect(width//2 - 260, 250, 240, 200)
     ai_card = pygame.Rect(width//2 + 20, 250, 240, 200)
     
@@ -432,7 +467,7 @@ def choose_first_screen():
         pygame.draw.rect(win, card_bg, card, border_radius=15)
         pygame.draw.rect(win, button_border, card, 1, border_radius=15)
     
-    # Player option
+    # Player option display
     pygame.draw.circle(win, player_color, (player_card.centerx, player_card.centery - 30), 40)
     player_x = player_card.centerx
     player_y = player_card.centery - 30
@@ -446,14 +481,14 @@ def choose_first_screen():
     win.blit(player_text, (player_card.centerx - player_text.get_width()//2, 
                           player_card.centery + 40))
     
-    # AI option
+    # AI option display
     pygame.draw.circle(win, ai_color, (ai_card.centerx, ai_card.centery - 30), 40, 6)
     
     ai_text = button_font.render("AI Starts", True, dark_text)
     win.blit(ai_text, (ai_card.centerx - ai_text.get_width()//2, 
                       ai_card.centery + 40))
     
-    # Create invisible buttons over cards
+    # Create invisible buttons on top of the cards
     player_btn = Button(player_card.x, player_card.y, player_card.width, 
                        player_card.height, "", func=set_player_first)
     ai_btn = Button(ai_card.x, ai_card.y, ai_card.width, 
@@ -466,10 +501,10 @@ def choose_first_screen():
     buttons = [player_btn, ai_btn, back_btn]
     
     while True:
-        # Update card hover effects
+        # Update hover effects for the cards
         mouse_pos = pygame.mouse.get_pos()
         
-        # Redraw cards with hover effect
+        # Redraw cards to show hover state
         for i, card in enumerate([player_card, ai_card]):
             is_hover = card.collidepoint(mouse_pos)
             color = button_hover if is_hover else card_bg
@@ -478,7 +513,7 @@ def choose_first_screen():
             pygame.draw.rect(win, color, card, border_radius=15)
             pygame.draw.rect(win, button_border, card, 1, border_radius=15)
             
-            # Redraw symbols
+            # Redraw the symbols on each card
             if i == 0:  # Player card
                 pygame.draw.circle(win, player_color, (card.centerx, card.centery - 30), 40)
                 pygame.draw.line(win, card_bg, (card.centerx - 25, card.centery - 55), 
@@ -494,7 +529,7 @@ def choose_first_screen():
                 win.blit(ai_text, (card.centerx - ai_text.get_width()//2, 
                                   card.centery + 40))
         
-        # Draw other elements
+        # Draw other UI elements
         title_card = pygame.Rect(40, 60, width - 80, 120)
         pygame.draw.rect(win, card_bg, title_card, border_radius=20)
         title_surf = title_font.render(title, True, dark_text)
@@ -509,7 +544,7 @@ def choose_first_screen():
                 pygame.quit()
                 sys.exit()
             
-            if event.type == pygame.mousebuttondown:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 for btn in buttons:
                     if btn.rect.collidepoint(mouse_pos):
@@ -526,7 +561,7 @@ def set_ai_first():
     first_player = "ai"
     game_loop()
 
-# ====================== MAIN MENU ===========================
+# Main menu
 def main_menu():
     # Create menu buttons
     easy_btn = Button(width//2 - 220, 280, 200, 60, "Easy", 
@@ -548,7 +583,7 @@ def main_menu():
     
     menu_buttons = [easy_btn, medium_btn, hard_btn, quit_btn]
     
-    # Draw decorative elements
+    # Create decorative elements for the menu
     circles = []
     for _ in range(8):
         circles.append({
@@ -564,7 +599,7 @@ def main_menu():
     while True:
         win.fill(background)
         
-        # Draw animated floating circles
+        # Draw floating decorative circles
         for circle in circles:
             circle['x'] += circle['speed'] * circle['direction']
             if circle['x'] < 50 or circle['x'] > width - 50:
@@ -574,37 +609,37 @@ def main_menu():
             color_with_alpha = (*circle['color'], alpha)
             
             circle_surf = pygame.Surface((circle['radius'] * 2, circle['radius'] * 2), 
-                                        pygame.srcalpha)
+                                        pygame.SRCALPHA)
             pygame.draw.circle(circle_surf, color_with_alpha, 
                              (circle['radius'], circle['radius']), circle['radius'])
             win.blit(circle_surf, (circle['x'] - circle['radius'], 
                                   circle['y'] - circle['radius']))
         
-        # Draw title card
+        # Draw the title card
         title_card = pygame.Rect(40, 40, width - 80, 180)
         draw_shadow(win, title_card, (0, 0, 0), 25)
         pygame.draw.rect(win, card_bg, title_card, border_radius=25)
         
-        # Draw title
+        # Draw the title
         title = "Tic-Tac-Toe"
         title_surf = title_font.render(title, True, dark_text)
         win.blit(title_surf, (width//2 - title_surf.get_width()//2, 80))
         
-        # Draw subtitle
+        # Draw the subtitle
         subtitle = "Select Difficulty"
         subtitle_surf = sub_font.render(subtitle, True, medium_text)
         win.blit(subtitle_surf, (width//2 - subtitle_surf.get_width()//2, 160))
         
-        # Draw decorative line
+        # Draw a decorative line
         line_y = 200
         pygame.draw.line(win, blue, (width//2 - 80, line_y), 
                         (width//2 + 80, line_y), 2)
         
-        # Draw buttons
+        # Draw the menu buttons
         for btn in menu_buttons:
             btn.draw()
         
-        # Draw footer
+        # Draw the footer text
         footer_text = "A minimalist pastel experience"
         footer_surf = small_font.render(footer_text, True, light_text)
         win.blit(footer_surf, (width//2 - footer_surf.get_width()//2, height - 40))
@@ -616,7 +651,7 @@ def main_menu():
                 pygame.quit()
                 sys.exit()
             
-            if event.type == pygame.mousebuttondown:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 for btn in menu_buttons:
                     if btn.rect.collidepoint(mouse_pos):
