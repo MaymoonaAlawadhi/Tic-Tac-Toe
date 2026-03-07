@@ -22,6 +22,9 @@ A classic **Tic-Tac-Toe** game developed in Python as part of the ITCS440 course
 
 ## 📂 Project Structure
 Tic-Tac-Toe/
+
 ├── Tic-Tac-Toe.py # Main game script
+
 ├── README.md # Project documentation
+
 └── pycache/ # Python cache directory
